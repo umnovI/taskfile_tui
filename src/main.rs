@@ -5,7 +5,7 @@ use color_eyre::{
 use ratatui::widgets::List;
 use serde::Deserialize;
 use serde_yaml::{self, Value};
-use std::{collections::BTreeMap, fs, path::Path, time::Duration};
+use std::time::Duration;
 
 mod app;
 mod errors;

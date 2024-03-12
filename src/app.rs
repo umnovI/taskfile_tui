@@ -3,14 +3,13 @@ use color_eyre::{
     eyre::{bail, ContextCompat, WrapErr},
 };
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
+use ratatui::Terminal;
 use ratatui::{backend::Backend, widgets::*};
-use ratatui::{widgets::List, Terminal};
 use serde::Deserialize;
 use serde_yaml::{self, Value};
 use std::{
-    collections::{BTreeMap, HashMap},
+    collections::BTreeMap,
     fs,
-    path::Path,
     time::{Duration, Instant},
 };
 
