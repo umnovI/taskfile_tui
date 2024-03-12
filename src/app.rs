@@ -72,7 +72,7 @@ impl ItemList {
 
     fn select_prev(&mut self) {
         match self.state.selected() {
-            Some(i) if i == 0 => self.state.select(Some(self.list.len() - 1)),
+            Some(0) => self.state.select(Some(self.list.len() - 1)),
             Some(i) => self.state.select(Some(i - 1)),
             None => self.select_first(),
         }
