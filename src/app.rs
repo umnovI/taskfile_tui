@@ -108,8 +108,8 @@ impl App {
         let cur_item = self.get_current();
         match cur_item {
             Some(key) => match &self.items.list[key].desc {
-                Some(val) => match Value::as_str(&val) {
-                    Some(val) => &val,
+                Some(val) => match Value::as_str(val) {
+                    Some(val) => val,
                     _ => "Not a string.",
                 },
                 _ => "Description is empty.",
@@ -123,8 +123,8 @@ impl App {
         let cur_item = self.get_current();
         match cur_item {
             Some(key) => match &self.items.list[key].summary {
-                Some(val) => match Value::as_str(&val) {
-                    Some(val) => &val,
+                Some(val) => match Value::as_str(val) {
+                    Some(val) => val,
                     _ => "Not a string.",
                 },
                 _ => "Summary is empty.",

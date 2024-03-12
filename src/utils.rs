@@ -15,13 +15,13 @@ pub fn get_filepath<'a>(filenames: &'a [&str]) -> Option<&'a Path> {
             return Some(file);
         }
     }
-    return None;
+    None
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use rstest::rstest;
-    use std::{clone, fs::File};
-    use tempfile::tempdir;
+    
+    
+    
+    
 }
