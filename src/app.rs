@@ -31,22 +31,22 @@ struct Taskfile {
 
 /// Item properties
 #[derive(Clone, Debug)]
-struct ItemProps {
-    desc: Option<Value>,
-    summary: Option<Value>,
+pub struct ItemProps {
+    pub desc: Option<Value>,
+    pub summary: Option<Value>,
 }
 
 /// Struct that keeps full list of available items and their properties and current status
 #[derive(Clone, Debug)]
 pub struct ItemList {
-    pub list: HashMap<String, ItemProps>,
+    pub list: BTreeMap<String, ItemProps>,
     pub state: ListState,
 }
 
 impl ItemList {
     fn new() -> Self {
         Self {
-            list: HashMap::new(),
+            list: BTreeMap::new(),
             state: ListState::default(),
         }
     }
@@ -151,7 +151,7 @@ pub fn run<B: Backend>(
             if let Event::Key(key) = event::read()? {
                 if key.kind == KeyEventKind::Press {
                     match key.code {
-                        KeyCode::Char('q') => return Ok(()),
+                        KeyCode::Char('q') | KeyCode::Esc => return Ok(()),
                         KeyCode::Down => app.items.select_next(),
                         KeyCode::Up => app.items.select_prev(),
                         _ => {}
