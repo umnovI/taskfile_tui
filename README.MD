@@ -9,3 +9,5 @@ The program reads `Taskfile` in `$HOME` folder and outputs list of available tas
 
 - [x] Reads Taskfile in current directory
 - [x] TUI
+
+![TUI](./static/imgs/tui.jpg)
