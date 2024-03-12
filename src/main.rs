@@ -16,16 +16,18 @@ fn main() -> color_eyre::Result<()> {
     errors::install_hooks()?;
 
     // Init config file
-    let conf = app::init_config()?;
+    let mut app = app::init()?;
     // Init Tick rate
     let tick_rate = Duration::from_millis(250);
     // Init Terminal
     let mut terminal = tui::init()?;
     // Start App
-    app::run(&mut terminal, conf, tick_rate)?;
-    // let tui_list = List::new(conf);
+    app::run(&mut terminal, &mut app, tick_rate)?;
 
     // Restore terminal state
     tui::restore()?;
+
+    // Execute commands after restore
+
     Ok(())
 }

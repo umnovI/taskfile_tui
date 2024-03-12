@@ -2,11 +2,17 @@ use color_eyre::{
     self,
     eyre::{bail, ContextCompat, WrapErr},
 };
+use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use ratatui::{backend::Backend, widgets::*};
 use ratatui::{widgets::List, Terminal};
 use serde::Deserialize;
 use serde_yaml::{self, Value};
-use std::{collections::BTreeMap, fs, path::Path, time::Duration};
+use std::{
+    collections::BTreeMap,
+    fs,
+    path::Path,
+    time::{Duration, Instant},
+};
 
 use super::tui;
 use super::utils;
@@ -26,17 +32,18 @@ struct Taskfile {
 /// An item
 #[derive(Clone, Debug)]
 struct Item {
-    key: String,
+    name: String,
     desc: Option<Value>,
     summary: Option<Value>,
 }
 
-/// Struct that keeps list of available items and current status
+/// Struct that keeps full list of available items and their properties and current status
 #[derive(Clone, Debug)]
 struct ItemList {
     list: Vec<Item>,
     state: ListState,
 }
+
 impl ItemList {
     fn new() -> Self {
         Self {
@@ -46,7 +53,11 @@ impl ItemList {
     }
 
     fn add_item(&mut self, key: String, desc: Option<Value>, summary: Option<Value>) -> Self {
-        self.list.push(Item { key, desc, summary });
+        self.list.push(Item {
+            name: key,
+            desc,
+            summary,
+        });
         Self {
             list: self.list.clone(),
             state: self.state.clone(),
@@ -74,7 +85,23 @@ impl ItemList {
     }
 }
 
-pub fn init_config() -> color_eyre::Result<Vec<String>> {
+struct App {
+    /// List of task names
+    name_list: Vec<String>,
+    /// List of all tasks with corresponding properties
+    items: ItemList,
+}
+
+impl App {
+    fn new(name_list: Vec<String>, items: ItemList) -> Self {
+        Self { name_list, items }
+    }
+}
+
+/// Initialize Taskfile.
+///
+/// Returns Vec with available task names
+pub fn init() -> color_eyre::Result<App> {
     let taskfile = utils::get_filepath(&TASKFILE_NAMES);
 
     let tasks = {
@@ -103,7 +130,36 @@ pub fn init_config() -> color_eyre::Result<Vec<String>> {
         items.add_item(taskname, desc, summary);
     }
 
-    Ok(items.list.iter().map(|x| x.key.clone()).collect())
+    Ok(App::new(
+        items.list.iter().map(|x| x.name.clone()).collect(),
+        items,
+    ))
 }
 
-pub fn run<B: Backend>(terminal: &mut Terminal<B>, conf: Vec<String>, tick_rate: Duration) {}
+/// Start main loop
+pub fn run<B: Backend>(
+    terminal: &mut Terminal<B>,
+    app: &mut App,
+    tick_rate: Duration,
+) -> color_eyre::Result<()> {
+    let mut last_tick = Instant::now();
+    let mut tui_list = List::new(app.name_list);
+
+    loop {
+        terminal.draw(|f| ui(f, &mut tui_list))?;
+
+        let timeout = tick_rate.saturating_sub(last_tick.elapsed());
+        if crossterm::event::poll(timeout)? {
+            if let Event::Key(key) = event::read()? {
+                if key.kind == KeyEventKind::Press {
+                    match key.code {
+                        KeyCode::Char('q') => return Ok(()),
+                        KeyCode::Down => app.items.select_next(),
+                        KeyCode::Up => app.items.select_prev(),
+                        _ => {}
+                    }
+                }
+            }
+        }
+    }
+}
