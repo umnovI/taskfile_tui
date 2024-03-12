@@ -38,9 +38,9 @@ struct ItemProps {
 
 /// Struct that keeps full list of available items and their properties and current status
 #[derive(Clone, Debug)]
-struct ItemList {
-    list: HashMap<String, ItemProps>,
-    state: ListState,
+pub struct ItemList {
+    pub list: HashMap<String, ItemProps>,
+    pub state: ListState,
 }
 
 impl ItemList {
@@ -80,11 +80,12 @@ impl ItemList {
     }
 }
 
-struct App {
+#[derive(Clone, Debug)]
+pub struct App {
     /// List of task names
-    name_list: Vec<String>,
+    pub name_list: Vec<String>,
     /// List of all tasks with corresponding properties
-    items: ItemList,
+    pub items: ItemList,
 }
 
 impl App {
@@ -138,10 +139,12 @@ pub fn run<B: Backend>(
     tick_rate: Duration,
 ) -> color_eyre::Result<()> {
     let mut last_tick = Instant::now();
-    let mut tui_list = List::new(app.name_list);
+
+    // Selecting default value
+    app.items.select_first();
 
     loop {
-        terminal.draw(|f| ui(f, &mut tui_list))?;
+        terminal.draw(|frame| tui::ui(frame, app))?;
 
         let timeout = tick_rate.saturating_sub(last_tick.elapsed());
         if crossterm::event::poll(timeout)? {
@@ -155,6 +158,11 @@ pub fn run<B: Backend>(
                     }
                 }
             }
+        }
+
+        // Have no clue what it does
+        if last_tick.elapsed() >= tick_rate {
+            last_tick = Instant::now();
         }
     }
 }
