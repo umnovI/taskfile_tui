@@ -1,5 +1,4 @@
-use serde_yaml;
-use std::{array, fs, path::Path};
+use std::path::Path;
 
 /// Get existing filepath from a list.
 ///

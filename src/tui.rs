@@ -3,7 +3,6 @@ use std::{
     str::FromStr,
 };
 
-use color_eyre;
 use crossterm::{execute, terminal::*};
 use ratatui::{prelude::*, widgets::*};
 
@@ -28,7 +27,7 @@ pub fn restore() -> io::Result<()> {
 
 /// Draw the interface
 pub fn ui(frame: &mut Frame, app: &mut App) {
-    // Create two chunks with equal horizontal screen space
+    // Split screen to left and right sides
     let main_frame = Layout::default()
         .direction(Direction::Horizontal)
         .constraints([Constraint::Percentage(30), Constraint::Fill(1)])
@@ -43,11 +42,10 @@ pub fn ui(frame: &mut Frame, app: &mut App) {
                 .add_modifier(Modifier::BOLD)
                 .black(),
         );
-
     // We can now render the item list
     frame.render_stateful_widget(items, main_frame[0], &mut app.items.state);
 
-    // Then cut the right vertical piece into two
+    // Then cut the right vertical piece into three
     let right_side_chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
@@ -55,13 +53,31 @@ pub fn ui(frame: &mut Frame, app: &mut App) {
             Constraint::Percentage(50),
             Constraint::Percentage(10),
         ])
-        .split(main_frame[1]); // Return the right chunk
+        .split(main_frame[1]);
 
-    /* ------ Drawing footer. Should stay last -------*/
-    let footer = Paragraph::new(Line::from(Span::styled(
-        "(q) / (Esc) to quit",
-        Style::default(),
-    )))
+    /* ------ Drawing Right Top -------*/
+
+    let right_top = Block::default().title("Description").borders(Borders::ALL);
+    let right_top_text = Paragraph::new(Line::from(app.get_desc()))
+        .block(right_top)
+        .wrap(Wrap { trim: false });
+    frame.render_widget(right_top_text, right_side_chunks[0]);
+
+    /* ------ Drawing Right Bottom -------*/
+
+    let right_btm = Block::default().title("Summary").borders(Borders::ALL);
+    let right_btm_text = Paragraph::new(Line::from(app.get_summary()))
+        .block(right_btm)
+        .wrap(Wrap { trim: false });
+    frame.render_widget(right_btm_text, right_side_chunks[1]);
+
+    /* ------ Drawing footer -------*/
+    let footer = Paragraph::new(Line::from(vec![
+        "(q) / (Esc)".fg(Color::from_str("#d45e7b").unwrap()),
+        " to quit | ".into(),
+        "(Enter)".fg(Color::from_str("#ee9966").unwrap()),
+        " to select task".into(),
+    ]))
     .block(Block::default().borders(Borders::ALL));
     frame.render_widget(footer, right_side_chunks[2]);
 }

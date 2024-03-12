@@ -91,6 +91,47 @@ impl App {
     fn new(name_list: Vec<String>, items: ItemList) -> Self {
         Self { name_list, items }
     }
+
+    /// Get currently selected item's name
+    fn get_current(&self) -> Option<&str> {
+        match self.items.state.selected() {
+            Some(i) => match self.name_list.get(i) {
+                Some(name) => Some(name),
+                None => None,
+            },
+            None => None,
+        }
+    }
+
+    /// Returns description of currently selected item
+    pub fn get_desc(&self) -> &str {
+        let cur_item = self.get_current();
+        match cur_item {
+            Some(key) => match &self.items.list[key].desc {
+                Some(val) => match Value::as_str(&val) {
+                    Some(val) => &val,
+                    _ => "Not a string.",
+                },
+                _ => "Description is empty.",
+            },
+            _ => "Item not found.",
+        }
+    }
+
+    /// Returns summary of currently selected item
+    pub fn get_summary(&self) -> &str {
+        let cur_item = self.get_current();
+        match cur_item {
+            Some(key) => match &self.items.list[key].summary {
+                Some(val) => match Value::as_str(&val) {
+                    Some(val) => &val,
+                    _ => "Not a string.",
+                },
+                _ => "Summary is empty.",
+            },
+            _ => "Item not found.",
+        }
+    }
 }
 
 /// Initialize Taskfile.
