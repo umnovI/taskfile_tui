@@ -134,9 +134,9 @@ impl App {
     }
 }
 
-/// Initialize Taskfile.
+/// Initialize App.
 ///
-/// Returns Vec with available task names
+/// Returns App object
 pub fn init() -> color_eyre::Result<App> {
     let taskfile = utils::get_filepath(&TASKFILE_NAMES);
 
