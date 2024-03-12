@@ -1,10 +1,5 @@
-use color_eyre::{
-    self,
-    eyre::{bail, ContextCompat, WrapErr},
-};
-use ratatui::widgets::List;
-use serde::Deserialize;
-use serde_yaml::{self, Value};
+use color_eyre;
+
 use std::time::Duration;
 
 mod app;
