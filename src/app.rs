@@ -8,7 +8,7 @@ use ratatui::{widgets::List, Terminal};
 use serde::Deserialize;
 use serde_yaml::{self, Value};
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, HashMap},
     fs,
     path::Path,
     time::{Duration, Instant},
@@ -29,10 +29,9 @@ struct Taskfile {
     tasks: BTreeMap<String, BTreeMap<String, Value>>,
 }
 
-/// An item
+/// Item properties
 #[derive(Clone, Debug)]
-struct Item {
-    name: String,
+struct ItemProps {
     desc: Option<Value>,
     summary: Option<Value>,
 }
@@ -40,24 +39,20 @@ struct Item {
 /// Struct that keeps full list of available items and their properties and current status
 #[derive(Clone, Debug)]
 struct ItemList {
-    list: Vec<Item>,
+    list: HashMap<String, ItemProps>,
     state: ListState,
 }
 
 impl ItemList {
     fn new() -> Self {
         Self {
-            list: Vec::new(),
+            list: HashMap::new(),
             state: ListState::default(),
         }
     }
 
-    fn add_item(&mut self, key: String, desc: Option<Value>, summary: Option<Value>) -> Self {
-        self.list.push(Item {
-            name: key,
-            desc,
-            summary,
-        });
+    fn add_item(&mut self, name: String, desc: Option<Value>, summary: Option<Value>) -> Self {
+        self.list.insert(name, ItemProps { desc, summary });
         Self {
             list: self.list.clone(),
             state: self.state.clone(),
@@ -131,7 +126,7 @@ pub fn init() -> color_eyre::Result<App> {
     }
 
     Ok(App::new(
-        items.list.iter().map(|x| x.name.clone()).collect(),
+        items.list.iter().map(|x| x.0.clone()).collect(),
         items,
     ))
 }
