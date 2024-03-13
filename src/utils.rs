@@ -1,6 +1,6 @@
-use color_eyre::eyre::{ContextCompat, ErrReport};
+use color_eyre::eyre::ContextCompat;
 use home::home_dir;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 /// Get existing filepath from a list.
 ///
@@ -10,7 +10,7 @@ use std::path::{Path, PathBuf};
 /// Returns:
 ///     First existing path found. `None` if none of the given files exist.
 ///
-pub fn get_filepath<'a>(filenames: &'a [&str]) -> color_eyre::Result<Option<PathBuf>> {
+pub fn get_filepath(filenames: &[&str]) -> color_eyre::Result<Option<PathBuf>> {
     let home: PathBuf = home_dir().wrap_err("Could not find home path.")?;
     for name in filenames {
         let file = home.join(name);
