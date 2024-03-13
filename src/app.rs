@@ -231,11 +231,11 @@ pub fn task_exec(app: &App) -> color_eyre::Result<()> {
     if let Some(taskname) = app.get_current() {
         if cfg!(target_os = "windows") {
             Command::new("nu")
-                .args(["--commands", "task", taskname])
+                .args(["--commands", &format!("task {}", taskname)])
                 .status()?
         } else {
             Command::new("sh")
-                .args(["-Command", "task", taskname])
+                .args(["-Command", &format!("task {}", taskname)])
                 .status()?
         };
     }
