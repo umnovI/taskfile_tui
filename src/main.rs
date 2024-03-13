@@ -8,7 +8,7 @@ mod utils;
 fn main() -> color_eyre::Result<()> {
     errors::install_hooks()?;
 
-    // Init config file
+    // Init app object
     let mut app = app::init()?;
 
     // Init Terminal
