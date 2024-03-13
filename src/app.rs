@@ -144,7 +144,7 @@ impl App {
 ///
 /// Returns App object
 pub fn init() -> color_eyre::Result<App> {
-    let taskfile = utils::get_filepath(&TASKFILE_NAMES);
+    let taskfile = utils::get_filepath(&TASKFILE_NAMES)?;
 
     let tasks = {
         let file = fs::read_to_string(taskfile.wrap_err("Could not find Taskfile")?)
