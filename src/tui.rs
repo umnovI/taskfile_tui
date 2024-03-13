@@ -78,6 +78,7 @@ pub fn ui(frame: &mut Frame, app: &mut App) {
         "(Enter)".fg(Color::from_str("#ee9966").unwrap()),
         " to select task".into(),
     ]))
+    .centered()
     .block(Block::default().borders(Borders::ALL));
     frame.render_widget(footer, right_side_chunks[2]);
 }

@@ -1,5 +1,3 @@
-
-
 use std::time::Duration;
 
 mod app;
@@ -21,6 +19,7 @@ fn main() -> color_eyre::Result<()> {
     tui::restore()?;
 
     // Execute commands after restore
+    app::task_exec(&app)?;
 
     Ok(())
 }

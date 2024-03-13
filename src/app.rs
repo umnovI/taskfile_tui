@@ -10,6 +10,7 @@ use serde_yaml::{self, Value};
 use std::{
     collections::BTreeMap,
     fs,
+    process::Command,
     time::{Duration, Instant},
 };
 
@@ -22,21 +23,24 @@ const TASKFILE_NAMES: [&str; 2] = ["Taskfile.yml", "Taskfile.yaml"];
 const TASKFILE_VERSION: &str = "3";
 
 /// Taskfile struct
-#[derive(Debug, Deserialize)]
+#[cfg_attr(debug_assertions, derive(Debug))]
+#[derive(Deserialize)]
 struct Taskfile {
     version: String,
     tasks: BTreeMap<String, BTreeMap<String, Value>>,
 }
 
 /// Item properties
-#[derive(Clone, Debug)]
+#[cfg_attr(debug_assertions, derive(Debug))]
+#[derive(Clone)]
 pub struct ItemProps {
     pub desc: Option<Value>,
     pub summary: Option<Value>,
 }
 
 /// Struct that keeps full list of available items and their properties and current status
-#[derive(Clone, Debug)]
+#[cfg_attr(debug_assertions, derive(Debug))]
+#[derive(Clone)]
 pub struct ItemList {
     pub list: BTreeMap<String, ItemProps>,
     pub state: ListState,
@@ -79,17 +83,24 @@ impl ItemList {
     }
 }
 
-#[derive(Clone, Debug)]
+#[cfg_attr(debug_assertions, derive(Debug))]
+#[derive(Clone)]
 pub struct App {
     /// List of task names
     pub name_list: Vec<String>,
     /// List of all tasks with corresponding properties
     pub items: ItemList,
+    /// Whether a selected command should be executed
+    pub execute_selected: bool,
 }
 
 impl App {
     fn new(name_list: Vec<String>, items: ItemList) -> Self {
-        Self { name_list, items }
+        Self {
+            name_list,
+            items,
+            execute_selected: false,
+        }
     }
 
     /// Get currently selected item's name
@@ -166,6 +177,10 @@ pub fn init() -> color_eyre::Result<App> {
         items.add_item(taskname, desc, summary);
     }
 
+    if items.list.len() == 0 {
+        bail!("No tasks found")
+    }
+
     Ok(App::new(
         items.list.iter().map(|x| x.0.clone()).collect(),
         items,
@@ -194,6 +209,10 @@ pub fn run<B: Backend>(
                         KeyCode::Char('q') | KeyCode::Esc => return Ok(()),
                         KeyCode::Down => app.items.select_next(),
                         KeyCode::Up => app.items.select_prev(),
+                        KeyCode::Enter => {
+                            app.execute_selected = true;
+                            return Ok(());
+                        }
                         _ => {}
                     }
                 }
@@ -205,4 +224,20 @@ pub fn run<B: Backend>(
             last_tick = Instant::now();
         }
     }
+}
+
+pub fn task_exec(app: &App) -> color_eyre::Result<()> {
+    if let Some(taskname) = app.get_current() {
+        if cfg!(target_os = "windows") {
+            Command::new("pwsh")
+                .args(["-Command", "task", taskname])
+                .status()?
+        } else {
+            Command::new("sh")
+                .args(["-Command", "task", taskname])
+                .status()?
+        };
+    }
+
+    Ok(())
 }
