@@ -19,7 +19,9 @@ fn main() -> color_eyre::Result<()> {
     tui::restore()?;
 
     // Execute commands after restore
-    app::task_exec(&app)?;
+    if app.execute_selected {
+        app::task_exec(&app)?;
+    }
 
     Ok(())
 }
