@@ -7,12 +7,7 @@ use ratatui::Terminal;
 use ratatui::{backend::Backend, widgets::*};
 use serde::Deserialize;
 use serde_yaml::{self, Value};
-use std::{
-    collections::BTreeMap,
-    fs,
-    process::Command,
-    time::{Duration, Instant},
-};
+use std::{collections::BTreeMap, fs, process::Command, time::Duration};
 
 use super::tui;
 use super::utils;
@@ -177,7 +172,7 @@ pub fn init() -> color_eyre::Result<App> {
         items.add_item(taskname, desc, summary);
     }
 
-    if items.list.len() == 0 {
+    if items.list.is_empty() {
         bail!("No tasks found")
     }
 
@@ -193,8 +188,6 @@ pub fn run<B: Backend>(
     app: &mut App,
     tick_rate: Duration,
 ) -> color_eyre::Result<()> {
-    let mut last_tick = Instant::now();
-
     // Selecting default value
     app.items.select_first();
 
