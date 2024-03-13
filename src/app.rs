@@ -226,11 +226,12 @@ pub fn run<B: Backend>(
     }
 }
 
+/// Start task
 pub fn task_exec(app: &App) -> color_eyre::Result<()> {
     if let Some(taskname) = app.get_current() {
         if cfg!(target_os = "windows") {
-            Command::new("pwsh")
-                .args(["-Command", "task", taskname])
+            Command::new("nu")
+                .args(["--commands", "task", taskname])
                 .status()?
         } else {
             Command::new("sh")
