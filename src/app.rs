@@ -201,8 +201,7 @@ pub fn run<B: Backend>(
     loop {
         terminal.draw(|frame| tui::ui(frame, app))?;
 
-        let timeout = tick_rate.saturating_sub(last_tick.elapsed());
-        if crossterm::event::poll(timeout)? {
+        if crossterm::event::poll(tick_rate)? {
             if let Event::Key(key) = event::read()? {
                 if key.kind == KeyEventKind::Press {
                     match key.code {
@@ -217,11 +216,6 @@ pub fn run<B: Backend>(
                     }
                 }
             }
-        }
-
-        // Have no clue what it does
-        if last_tick.elapsed() >= tick_rate {
-            last_tick = Instant::now();
         }
     }
 }
