@@ -235,7 +235,7 @@ pub fn task_exec(app: &App) -> color_eyre::Result<()> {
                 .status()?
         } else {
             Command::new("sh")
-                .args(["-Command", &format!("task {}", taskname)])
+                .args(["-c", &format!("task {}", taskname)])
                 .status()?
         };
     }
