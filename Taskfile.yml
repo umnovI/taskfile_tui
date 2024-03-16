@@ -1,0 +1,29 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  build-release:
+    aliases:
+      - "br"
+    cmds:
+      - cargo build --release
+    desc: Builds release version of the app
+
+  create-manifest:
+    cmds:
+      - mgen --cwd "{{.USER_WORKING_DIR}}" --alias tl
+    desc: Runs create manifest for current crate.
+
+  release-with-manifest:
+    aliases:
+      - "rwm"
+    cmds:
+      - task: build-release
+      - task: create-manifest
+    desc: Calls release build, then creates manifest for this build
+
+  scoop-install:
+    cmds:
+      - scoop install "$HOME\scoop\buckets\local\pseudo_manifest"
+    desc: Installs the app with Scoop
