@@ -9,8 +9,10 @@ use serde::Deserialize;
 use serde_yaml::{self, Value};
 use std::{collections::BTreeMap, fs, process::Command, time::Duration};
 
-use super::tui;
-use super::utils;
+use crate::Args;
+
+use crate::tui;
+use crate::utils;
 
 /// List of allowed filenames in order of importance.
 const TASKFILE_NAMES: [&str; 2] = ["Taskfile.yml", "Taskfile.yaml"];
@@ -143,8 +145,8 @@ impl App {
 /// Initialize App.
 ///
 /// Returns App object
-pub fn init() -> color_eyre::Result<App> {
-    let taskfile = utils::get_filepath(&TASKFILE_NAMES)?;
+pub fn init(args: &Args) -> color_eyre::Result<App> {
+    let taskfile = utils::get_filepath(args, &TASKFILE_NAMES)?;
 
     let tasks = {
         let file = fs::read_to_string(taskfile.wrap_err("Could not find Taskfile")?)

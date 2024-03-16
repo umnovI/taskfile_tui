@@ -2,6 +2,8 @@ use color_eyre::eyre::ContextCompat;
 use home::home_dir;
 use std::path::PathBuf;
 
+use crate::Args;
+
 /// Get existing filepath from a list.
 ///
 /// Args:
@@ -10,10 +12,16 @@ use std::path::PathBuf;
 /// Returns:
 ///     First existing path found. `None` if none of the given files exist.
 ///
-pub fn get_filepath(filenames: &[&str]) -> color_eyre::Result<Option<PathBuf>> {
-    let home: PathBuf = home_dir().wrap_err("Could not find home path.")?;
+pub fn get_filepath(args: &Args, filenames: &[&str]) -> color_eyre::Result<Option<PathBuf>> {
+    let path = if args.global {
+        home_dir().wrap_err("Could not find home path.")?
+    } else {
+        let mut cwd = PathBuf::new();
+        cwd.push(".");
+        cwd
+    };
     for name in filenames {
-        let file = home.join(name);
+        let file = path.join(name);
         if file.is_file() {
             return Ok(Some(file));
         }

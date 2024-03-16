@@ -4,12 +4,23 @@ mod app;
 mod errors;
 mod tui;
 mod utils;
+use clap::Parser;
+
+/// TUI for your Taskfile
+#[derive(Parser)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// Look for global taskfile
+    #[arg(short, long)]
+    global: bool,
+}
 
 fn main() -> color_eyre::Result<()> {
     errors::install_hooks()?;
+    let args = Args::parse();
 
     // Init app object
-    let mut app = app::init()?;
+    let mut app = app::init(&args)?;
 
     // Init Terminal
     let mut terminal = tui::init()?;
