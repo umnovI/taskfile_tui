@@ -926,7 +926,7 @@ dependencies = [
 
 [[package]]
 name = "taskfile_tui"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "clap",
  "color-eyre",

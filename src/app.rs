@@ -219,7 +219,7 @@ pub fn run<B: Backend>(
 pub fn task_exec(args: &Args, app: &App) -> color_eyre::Result<()> {
     let mut exec_args = String::new();
     if args.global {
-        exec_args.push_str("-g")
+        exec_args.push_str("-g");
     }
 
     if let Some(taskname) = app.get_current() {
