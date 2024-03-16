@@ -9,10 +9,6 @@ tasks:
     cmds:
       - cargo build --release
     desc: Builds release version of the app
-    sources:
-      - src/*.rs
-    generates:
-      - ./target/release/taskfile_tui{{exeExt}}
 
   create-manifest:
     cmds:
