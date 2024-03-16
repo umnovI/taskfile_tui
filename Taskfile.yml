@@ -25,5 +25,5 @@ tasks:
 
   scoop-install:
     cmds:
-      - scoop install "$HOME\scoop\buckets\local\pseudo_manifest"
+      - scoop install "$HOME\scoop\buckets\local\taskfile_tui"
     desc: Installs the app with Scoop
