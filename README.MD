@@ -1,13 +1,10 @@
-This is a personal project that implements TUI for global taskfile.
-
-# The idea
-
-The program reads `Taskfile` in `$HOME` folder and outputs list of available tasks (with their description and summary) to run. Selecting a task name calls the task with this name.
+This is a personal project that implements TUI for taskfile.
 
 
-# What is ready
+The program reads `Taskfile` in current or `$HOME` directory and outputs a list of available tasks with their description and summary. Selecting a task name calls the task with this name.
 
-- [x] Reads Taskfile in current directory
-- [x] TUI
+Accepts `-g` flag to look for global taskfile.
+
+
 
 ![TUI](./static/imgs/tui.jpg)
