@@ -31,7 +31,7 @@ fn main() -> color_eyre::Result<()> {
 
     // Execute commands after restore
     if app.execute_selected {
-        app::task_exec(&app)?;
+        app::task_exec(&args, &app)?;
     }
 
     Ok(())

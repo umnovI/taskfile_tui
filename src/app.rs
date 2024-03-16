@@ -216,15 +216,20 @@ pub fn run<B: Backend>(
 }
 
 /// Start task
-pub fn task_exec(app: &App) -> color_eyre::Result<()> {
+pub fn task_exec(args: &Args, app: &App) -> color_eyre::Result<()> {
+    let mut exec_args = String::new();
+    if args.global {
+        exec_args.push_str("-g")
+    }
+
     if let Some(taskname) = app.get_current() {
         if cfg!(target_os = "windows") {
             Command::new("nu")
-                .args(["--commands", &format!("task {} -g", taskname)])
+                .args(["--commands", &format!("task {} {}", taskname, exec_args)])
                 .status()?
         } else {
             Command::new("sh")
-                .args(["-c", &format!("task {} -g", taskname)])
+                .args(["-c", &format!("task {} {}", taskname, exec_args)])
                 .status()?
         };
     }
