@@ -4,6 +4,7 @@ mod app;
 mod errors;
 mod tui;
 mod utils;
+use anyhow::Result;
 use clap::Parser;
 
 /// TUI for your Taskfile
@@ -15,7 +16,7 @@ struct Args {
     global: bool,
 }
 
-fn main() -> color_eyre::Result<()> {
+fn main() -> Result<()> {
     errors::install_hooks()?;
     let args = Args::parse();
 

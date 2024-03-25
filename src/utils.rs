@@ -1,4 +1,4 @@
-use color_eyre::eyre::ContextCompat;
+use anyhow::{Context, Result};
 use home::home_dir;
 use std::path::PathBuf;
 
@@ -12,9 +12,9 @@ use crate::Args;
 /// Returns:
 ///     First existing path found. `None` if none of the given files exist.
 ///
-pub fn get_filepath(args: &Args, filenames: &[&str]) -> color_eyre::Result<Option<PathBuf>> {
+pub fn get_filepath(args: &Args, filenames: &[&str]) -> Result<Option<PathBuf>> {
     let path = if args.global {
-        home_dir().wrap_err("Could not find home path.")?
+        home_dir().with_context(|| "Could not find home path.")?
     } else {
         let mut cwd = PathBuf::new();
         cwd.push(".");

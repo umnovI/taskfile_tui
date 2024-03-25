@@ -1,7 +1,4 @@
-use color_eyre::{
-    self,
-    eyre::{bail, ContextCompat, WrapErr},
-};
+use anyhow::{bail, Context, Result};
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use ratatui::Terminal;
 use ratatui::{backend::Backend, widgets::*};
@@ -145,13 +142,14 @@ impl App {
 /// Initialize App.
 ///
 /// Returns App object
-pub fn init(args: &Args) -> color_eyre::Result<App> {
+pub fn init(args: &Args) -> Result<App> {
     let taskfile = utils::get_filepath(args, &TASKFILE_NAMES)?;
 
     let tasks = {
-        let file = fs::read_to_string(taskfile.wrap_err("Could not find Taskfile")?)
-            .wrap_err("Could not read found Taskfile")?;
-        let data: Taskfile = serde_yaml::from_str(&file).wrap_err("Could not parse Taskfile.")?;
+        let file = fs::read_to_string(taskfile.with_context(|| "Could not find Taskfile")?)
+            .with_context(|| "Could not read found Taskfile")?;
+        let data: Taskfile =
+            serde_yaml::from_str(&file).with_context(|| "Could not parse Taskfile.")?;
         if data.version != TASKFILE_VERSION {
             bail!("Unsupported Taskfile version. Supported version is {TASKFILE_VERSION}")
         }
@@ -189,7 +187,7 @@ pub fn run<B: Backend>(
     terminal: &mut Terminal<B>,
     app: &mut App,
     tick_rate: Duration,
-) -> color_eyre::Result<()> {
+) -> Result<()> {
     // Selecting default value
     app.items.select_first();
 
@@ -216,7 +214,7 @@ pub fn run<B: Backend>(
 }
 
 /// Start task
-pub fn task_exec(args: &Args, app: &App) -> color_eyre::Result<()> {
+pub fn task_exec(args: &Args, app: &App) -> Result<()> {
     let mut exec_args = String::new();
     if args.global {
         exec_args.push_str("-g");
