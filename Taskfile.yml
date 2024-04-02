@@ -10,6 +10,13 @@ tasks:
       - cargo build --release
     desc: Builds release version of the app
 
+  run:
+    aliases:
+      - "br"
+    cmds:
+      - cargo run
+    desc: RUN ONLY FROM SHELL!
+
   create-manifest:
     cmds:
       - mgen --cwd "{{.USER_WORKING_DIR}}" --alias tl
