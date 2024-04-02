@@ -28,6 +28,3 @@ pub fn get_filepath(args: &Args, filenames: &[&str]) -> Result<Option<PathBuf>> 
     }
     Ok(None)
 }
-
-#[cfg(test)]
-mod tests {}
