@@ -51,7 +51,7 @@ pub fn ui(frame: &mut Frame, app: &mut App) {
         .constraints([
             Constraint::Percentage(40),
             Constraint::Percentage(50),
-            Constraint::Percentage(10),
+            Constraint::Min(3),
         ])
         .split(main_frame[1]);
 
