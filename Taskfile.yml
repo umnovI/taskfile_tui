@@ -12,7 +12,7 @@ tasks:
 
   run:
     aliases:
-      - "br"
+      - "r"
     cmds:
       - cargo run
     desc: RUN ONLY FROM SHELL!
