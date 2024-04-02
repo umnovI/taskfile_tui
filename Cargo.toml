@@ -11,7 +11,8 @@ serde = { version = "1.0.197", features = ["derive"] }
 crossterm = "0.27.0"
 ratatui = "0.26.1"
 rstest = "0.18.2"
-serde_yaml = "0.9.34+deprecated"
+# Crate is depricated and not supported anymore.
+serde_yaml = "0.9.34"
 tempfile = "3.10.1"
 home = "0.5.9"
 clap = { version = "4.5.4", features = ["derive"] }
