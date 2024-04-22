@@ -9,7 +9,7 @@ license = "BSD-3-Clause"
 [dependencies]
 serde = { version = "1.0.197", features = ["derive"] }
 crossterm = "0.27.0"
-ratatui = "0.26.1"
+ratatui = "0.26.2"
 # Crate is depricated and not supported anymore.
 serde_yaml = "0.9.34"
 home = "0.5.9"
