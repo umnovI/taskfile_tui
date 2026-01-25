@@ -51,9 +51,11 @@ A high-performance, interactive terminal interface for managing and executing [T
 ### From Source (Recommended)
 Ensure you have the Rust toolchain installed. Clone the repository and build:
 ```bash
-git clone [https://github.com/yourusername/taskfile_tui](https://github.com/yourusername/taskfile_tui)
+git clone https://github.com/umnovI/taskfile_tui.git
 cd taskfile_tui
 cargo install --path .
 ```
+
+# Taskfile TUI ⚡
 
 ![TUI](./static/imgs/tui.jpg)
