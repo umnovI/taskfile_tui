@@ -54,5 +54,6 @@ Ensure you have the Rust toolchain installed. Clone the repository and build:
 git clone [https://github.com/yourusername/taskfile_tui](https://github.com/yourusername/taskfile_tui)
 cd taskfile_tui
 cargo install --path .
+```
 
 ![TUI](./static/imgs/tui.jpg)
