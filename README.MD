@@ -56,6 +56,8 @@ cd taskfile_tui
 cargo install --path .
 ```
 
-## Taskfile TUI ⚡
+---
+
+## ⚡Taskfile TUI
 
 ![TUI](./static/imgs/tui.jpg)
