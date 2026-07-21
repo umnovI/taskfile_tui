@@ -32,5 +32,5 @@ tasks:
 
   scoop-install:
     cmds:
-      - scoop install "$HOME\scoop\buckets\local\taskfile_tui"
+      - scoop install "$HOME\scoop\buckets\local\taskfile_tui.json"
     desc: Installs the app with Scoop
